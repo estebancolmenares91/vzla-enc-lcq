@@ -1,0 +1,16 @@
+{
+	"name": "enc-gofundme-scraper",
+	"private": true,
+	"version": "0.1.0",
+	"scripts": {
+		"dev": "wrangler dev",
+		"deploy": "wrangler deploy",
+		"tail": "wrangler tail",
+		"kv:create": "wrangler kv namespace create GFM_DATA"
+	},
+	"devDependencies": {
+		"@cloudflare/workers-types": "^4.20240924.0",
+		"typescript": "^5.6.0",
+		"wrangler": "^3.90.0"
+	}
+}
