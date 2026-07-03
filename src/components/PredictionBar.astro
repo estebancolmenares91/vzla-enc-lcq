@@ -383,10 +383,14 @@ const charMap = { deejay: "/chars/deejay.webp", zangief: "/chars/zangief.webp" }
 
 		const submitVote = async () => {
 			if (userRecord || !currentUser) return;
-			const tag = (inputTag?.value || "").trim();
+			const tag = (inputTag?.value || "").trim().slice(0, 32);
 			const amtRaw = Number(inputAmt?.value || "0");
 			const amount = Math.max(1, Math.min(10000, amtRaw || currentAmount));
 			if (tag.length < 2) {
+				inputTag?.focus();
+				return;
+			}
+			if (tag.length > 32) {
 				inputTag?.focus();
 				return;
 			}
