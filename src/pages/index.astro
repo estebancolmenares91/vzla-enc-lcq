@@ -1,11 +1,22 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Layout from "../layouts/Layout.astro";
+import BackgroundFX from "../components/BackgroundFX.astro";
+import StickyHeader from "../components/StickyHeader.astro";
+import HeroVS from "../components/HeroVS.astro";
+import CountdownBig from "../components/CountdownBig.astro";
+import PredictionBar from "../components/PredictionBar.astro";
+import DonationCard from "../components/DonationCard.astro";
+import Footer from "../components/Footer.astro";
 ---
 
 <Layout>
-	<Welcome />
+	<BackgroundFX />
+	<StickyHeader />
+	<main>
+		<HeroVS />
+		<CountdownBig />
+		<PredictionBar />
+		<DonationCard />
+	</main>
+	<Footer />
 </Layout>
