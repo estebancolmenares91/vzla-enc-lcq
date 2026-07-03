@@ -14,7 +14,7 @@ export async function signInWith(provider: AuthProvider): Promise<void> {
 	const { error } = await sb.auth.signInWithOAuth({
 		provider: provider as Provider,
 		options: {
-			redirectTo: `${window.location.origin}/#vota`,
+			redirectTo: `${window.location.origin}/`,
 			...(scopes ? { scopes } : {}),
 		},
 	});
