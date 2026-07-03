@@ -1,0 +1,469 @@
+---
+import { Image } from "astro:assets";
+import { EVENT, P1, P2 } from "../data/event.ts";
+import { default as encLogo } from "../assets/logos/enc_logo.webp";
+import FighterCard from "./FighterCard.astro";
+---
+
+<section class="hero" id="top" aria-labelledby="hero-title">
+	<div class="hero-bg" aria-hidden="true">
+		<div class="hero-bg-glow hero-bg-glow--cyan"></div>
+		<div class="hero-bg-glow hero-bg-glow--flame"></div>
+		<div class="hero-bg-grid"></div>
+	</div>
+
+	<div class="stage">
+		<aside class="stage-side stage-side--p1">
+			<FighterCard side="left" player={P1} />
+		</aside>
+
+		<div class="stage-center">
+			<h1 id="hero-title" class="hero-title reveal">
+				<span class="title-una">UNA</span>
+				<span class="title-mas">MÁS</span>
+			</h1>
+
+			<div class="ft10 reveal" role="note" aria-label="Formato First to 10">
+				<span class="ft10-line" aria-hidden="true"></span>
+				<span class="ft10-label">FIRST TO</span>
+				<span class="ft10-num">10</span>
+			</div>
+
+			<p class="hero-subtitle reveal">
+				<span class="subtitle-prefix">ÚLTIMA PLAZA PARA REPRESENTAR A</span>
+				<span class="subtitle-flag">
+					<span class="subtitle-strong" aria-label="VENEZUELA">
+						<span class="ve ve-y">VEN</span><span class="ve ve-b">EZU</span><span class="ve ve-r">ELA</span>
+					</span>
+					<span class="subtitle-prefix">EN LA</span>
+					<Image
+						src={encLogo}
+						alt="ENC"
+						class="enc-logo"
+						widths={[120, 200, 320]}
+					/>
+				</span>
+			</p>
+
+			<p class="hero-when reveal">
+				<span class="hero-when-live">EN VIVO POR</span>
+				<a
+					class="hero-when-twitch"
+					href={`https://twitch.tv/${EVENT.twitchChannel}`}
+					target="_blank"
+					rel="noopener noreferrer"
+					aria-label={`Ver canal de Twitch ${EVENT.twitchChannel} (abre en nueva pestaña)`}
+				>TWITCH <span class="hero-when-at">@</span>{EVENT.twitchChannel.toUpperCase()}</a>
+			</p>
+			<p class="hero-when-meta reveal">
+				<span class="hero-when-date">{EVENT.dateLabel}</span>
+				<span class="hero-when-sep" aria-hidden="true">·</span>
+				<span class="hero-when-time">{EVENT.timeLabel}</span>
+			</p>
+
+			<div class="hero-ctas reveal">
+				<a href="#vota" class="cta cta--primary">
+					<span>Pronostica al ganador</span>
+					<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+						<path fill="currentColor" d="M5 12h12l-4-4 1.4-1.4L20.8 12l-6.4 5.4L13 16l4-4H5v-1Z" />
+					</svg>
+				</a>
+				<a href="#donar" class="cta cta--outline">
+					<span>Apoya a los nuestros</span>
+				</a>
+			</div>
+		</div>
+
+		<aside class="stage-side stage-side--p2">
+			<FighterCard side="right" player={P2} />
+		</aside>
+
+		<div class="stage-vs reveal" aria-hidden="true">
+			<span class="stage-vs-badge">
+				<span class="stage-vs-text">VS</span>
+			</span>
+		</div>
+	</div>
+</section>
+
+<script>
+	const targets = document.querySelectorAll<HTMLElement>(".reveal");
+	if ("IntersectionObserver" in window) {
+		const io = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((e) => {
+					if (e.isIntersecting) {
+						e.target.classList.add("is-visible");
+						io.unobserve(e.target);
+					}
+				});
+			},
+			{ threshold: 0.12 },
+		);
+		targets.forEach((t) => io.observe(t));
+	} else {
+		targets.forEach((t) => t.classList.add("is-visible"));
+	}
+</script>
+
+<style>
+	.hero {
+		position: relative;
+		min-height: 100vh;
+		padding: 5rem 1.25rem 4rem;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: stretch;
+		overflow: hidden;
+	}
+
+	.hero-bg {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		overflow: hidden;
+	}
+
+	.hero-bg-glow {
+		position: absolute;
+		top: 20%;
+		width: 45%;
+		height: 75%;
+		filter: blur(90px);
+		opacity: 0.28;
+	}
+
+	.hero-bg-glow--cyan {
+		left: -5%;
+		background: radial-gradient(circle, var(--color-cyan) 0%, transparent 70%);
+	}
+
+	.hero-bg-glow--flame {
+		right: -5%;
+		background: radial-gradient(circle, var(--color-flame) 0%, transparent 70%);
+	}
+
+	.hero-bg-grid {
+		position: absolute;
+		inset: 0;
+		background-image:
+			linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+			linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+		background-size: 60px 60px;
+		mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+		-webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+	}
+
+	.stage {
+		position: relative;
+		width: 100%;
+		max-width: 1400px;
+		margin: 0 auto;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr) minmax(0, 1fr);
+		align-items: stretch;
+		gap: 1rem;
+	}
+
+	.stage-side {
+		display: flex;
+		align-items: stretch;
+		justify-content: center;
+		min-width: 0;
+	}
+
+	.stage-center {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 1.25rem;
+		padding: 1rem 0.5rem;
+		text-align: center;
+	}
+
+	.hero-title {
+		margin: 0;
+		font-family: var(--font-display);
+		text-transform: uppercase;
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		line-height: 1;
+	}
+
+	.title-una {
+		font-size: clamp(1.5rem, 2.4vw, 2rem);
+		letter-spacing: 0.55em;
+		color: var(--color-ash);
+		padding-left: 0.55em;
+		margin-bottom: clamp(1.5rem, 2.4vw, 2rem);
+	}
+
+	.title-mas {
+		font-size: clamp(4.5rem, 11vw, 9.5rem);
+		letter-spacing: -0.05em;
+		line-height: 1.15;
+		color: var(--color-bone);
+	}
+
+	.ft10 {
+		display: inline-flex;
+		align-items: baseline;
+		gap: 0.5rem;
+		margin-top: 0.5rem;
+		padding: 0 0.5rem;
+	}
+
+	.ft10-line {
+		display: none;
+	}
+
+	.ft10-label {
+		font-family: var(--font-body);
+		font-size: clamp(0.7rem, 0.9vw, 0.8rem);
+		letter-spacing: 0.42em;
+		text-transform: uppercase;
+		color: var(--color-ash);
+		font-weight: 600;
+	}
+
+	.ft10-num {
+		font-family: var(--font-display);
+		font-size: clamp(1.5rem, 1.8vw, 1.8rem);
+		line-height: 1;
+		letter-spacing: -0.02em;
+		color: var(--color-bone);
+	}
+
+	.hero-subtitle {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.4rem;
+		text-align: center;
+		margin: 0.5rem 0 0;
+	}
+
+	.subtitle-prefix {
+		font-family: var(--font-body);
+		font-size: clamp(0.7rem, 1.1vw, 0.85rem);
+		letter-spacing: 0.32em;
+		color: var(--color-ash);
+		text-transform: uppercase;
+	}
+
+	.subtitle-flag {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+
+	.subtitle-strong {
+		font-family: var(--font-display);
+		font-size: clamp(1.1rem, 2.2vw, 1.6rem);
+		letter-spacing: 0.18em;
+		display: inline-block;
+	}
+
+	.ve {
+		display: inline-block;
+	}
+
+	.ve-y { color: #ffcc00; }
+	.ve-b { color: #4a7bff; }
+	.ve-r { color: #ce1126; }
+
+	.enc-logo {
+		width: clamp(44px, 5vw, 70px);
+		height: auto;
+		filter: drop-shadow(0 0 12px rgba(124, 92, 255, 0.55));
+	}
+
+	.hero-when {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.55rem;
+		flex-wrap: wrap;
+		margin: 0.75rem 0 0;
+		padding: 0;
+		font-family: var(--font-body);
+		font-size: clamp(0.7rem, 1vw, 0.8rem);
+		letter-spacing: 0.26em;
+		text-transform: uppercase;
+		color: var(--color-bone);
+	}
+
+	.hero-when-live {
+		color: var(--color-ash);
+		font-weight: 600;
+	}
+
+	.hero-when-twitch {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.15rem;
+		padding: 0.32rem 0.75rem;
+		border: 1px solid rgba(124, 92, 255, 0.55);
+		border-radius: 999px;
+		color: var(--color-electric);
+		font-weight: 700;
+		text-decoration: none;
+		letter-spacing: 0.22em;
+		transition:
+			background 180ms ease,
+			border-color 180ms ease,
+			transform 180ms ease,
+			box-shadow 180ms ease;
+	}
+
+	.hero-when-twitch:hover,
+	.hero-when-twitch:focus-visible {
+		background: rgba(124, 92, 255, 0.12);
+		border-color: var(--color-electric);
+		box-shadow: 0 0 18px rgba(124, 92, 255, 0.35);
+		transform: translateY(-1px);
+		outline: none;
+	}
+
+	.hero-when-at {
+		color: var(--color-ash);
+		font-weight: 600;
+	}
+
+	.hero-when-sep {
+		color: var(--color-ink);
+	}
+
+	.hero-when-date,
+	.hero-when-time {
+		color: var(--color-bone);
+		font-weight: 600;
+	}
+
+	.hero-when-meta {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.55rem;
+		margin: 0.4rem 0 0;
+		padding: 0;
+		font-family: var(--font-body);
+		font-size: clamp(0.7rem, 1vw, 0.8rem);
+		letter-spacing: 0.26em;
+		text-transform: uppercase;
+		color: var(--color-bone);
+	}
+
+	@media (max-width: 640px) {
+		.hero-when {
+			gap: 0.4rem 0.5rem;
+		}
+	}
+
+	.hero-ctas {
+		display: flex;
+		gap: 0.85rem;
+		flex-wrap: wrap;
+		justify-content: center;
+		margin-top: 0.5rem;
+	}
+
+	.cta {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.8rem 1.4rem;
+		border-radius: 999px;
+		font-family: var(--font-body);
+		font-weight: 700;
+		font-size: 0.75rem;
+		letter-spacing: 0.22em;
+		text-transform: uppercase;
+		text-decoration: none;
+		transition: background 180ms ease, color 180ms ease, border-color 180ms ease;
+	}
+
+	.cta--primary {
+		background: #d44a1a;
+		color: var(--color-bone);
+	}
+
+	.cta--primary:hover,
+	.cta--primary:focus-visible {
+		background: #b53d12;
+		outline: none;
+	}
+
+	.cta--outline {
+		border: 1.5px solid rgba(25, 227, 255, 0.7);
+		color: var(--color-cyan);
+		background: transparent;
+	}
+
+	.cta--outline:hover,
+	.cta--outline:focus-visible {
+		border-color: var(--color-cyan);
+		background: rgba(25, 227, 255, 0.06);
+		outline: none;
+	}
+
+	.stage-vs {
+		display: none;
+	}
+
+	.vs-icon {
+		width: clamp(64px, 12vw, 120px);
+		height: auto;
+		filter: brightness(0) invert(1);
+	}
+
+	@media (max-width: 1024px) {
+		.stage {
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+		}
+		.stage-side {
+			order: 1;
+		}
+		.stage-side--p2 {
+			order: 3;
+		}
+		.stage-center {
+			order: 0;
+		}
+		.stage-vs {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			order: 2;
+			padding: 0.25rem 0;
+		}
+	}
+
+	@media (max-width: 640px) {
+		.hero {
+			padding: 4.5rem 1rem 3rem;
+		}
+		.hero-ctas {
+			gap: 0.5rem;
+		}
+		.cta {
+			padding: 0.7rem 1rem;
+			font-size: 0.68rem;
+			letter-spacing: 0.18em;
+		}
+		.stage-vs {
+			padding: 0;
+			margin: -0.25rem 0;
+		}
+		.vs-icon {
+			width: clamp(56px, 18vw, 80px);
+		}
+	}
+</style>

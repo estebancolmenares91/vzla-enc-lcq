@@ -1,0 +1,253 @@
+---
+import { Image } from "astro:assets";
+import { EVENT } from "../data/event.ts";
+import encLogo from "../assets/logos/enc_logo.webp";
+
+const socials = [
+	{
+		label: "X",
+		href: "{{X_URL}}",
+		path: "M18.244 2H21l-6.52 7.46L22 22h-6.063l-4.75-6.21L5.7 22H3l7.02-8.02L2 2h6.18l4.29 5.67L18.244 2Zm-2.12 18.26h1.68L7.95 3.62H6.16l9.964 16.64Z",
+	},
+	{
+		label: "Instagram",
+		href: "{{INSTAGRAM_URL}}",
+		path: "M12 2.2c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23C2.21 15.58 2.2 15.2 2.2 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.21 8.8 2.2 12 2.2Zm0 5.3a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Zm0 7.4a2.9 2.9 0 1 1 0-5.8 2.9 2.9 0 0 1 0 5.8Zm5.6-7.6a1.05 1.05 0 1 1-2.1 0 1.05 1.05 0 0 1 2.1 0Z",
+	},
+	{
+		label: "YouTube",
+		href: "{{YOUTUBE_URL}}",
+		path: "M21.6 7.2a2.5 2.5 0 0 0-1.76-1.77C18.27 5 12 5 12 5s-6.27 0-7.84.43A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.76 1.77C5.73 19 12 19 12 19s6.27 0 7.84-.43a2.5 2.5 0 0 0 1.76-1.77A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8ZM10 15V9l5.2 3L10 15Z",
+	},
+	{
+		label: "Discord",
+		href: "{{DISCORD_URL}}",
+		path: "M19.27 5.33A17.6 17.6 0 0 0 14.93 4l-.21.4a14.5 14.5 0 0 1 4.04 1.97 13.2 13.2 0 0 0-12.4 0A14.5 14.5 0 0 1 10.4 4.4L10.2 4a17.6 17.6 0 0 0-4.34 1.33C2.86 9.6 2 13.78 2.4 17.9a17.7 17.7 0 0 0 5.4 2.73l.43-.6a11.5 11.5 0 0 1-1.78-.86l.44-.33a12.6 12.6 0 0 0 10.22 0l.44.33a11.5 11.5 0 0 1-1.78.86l.43.6a17.7 17.7 0 0 0 5.4-2.73c.46-4.78-.74-8.93-3.33-12.57ZM9.5 15.5a1.9 1.9 0 0 1-1.75-2 1.9 1.9 0 0 1 1.75-2 1.9 1.9 0 0 1 1.75 2 1.9 1.9 0 0 1-1.75 2Zm5 0a1.9 1.9 0 0 1-1.75-2 1.9 1.9 0 0 1 1.75-2 1.9 1.9 0 0 1 1.75 2 1.9 1.9 0 0 1-1.75 2Z",
+	},
+	{
+		label: "Twitch",
+		href: `https://twitch.tv/${EVENT.twitchChannel}`,
+		path: "M11.571 4.714h1.715v5.143h-1.715V4.714Zm4.715 0H18v5.143h-1.714V4.714ZM6 0 1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0H6Zm14.571 11.143-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714v9.429ZM12.857 11.14H11.14V5.999h1.716v5.143Z",
+	},
+];
+---
+
+<footer class="site-footer" aria-labelledby="footer-title">
+	<div class="footer-inner">
+		<div class="footer-flag" aria-hidden="true">
+			<span class="flag-stripe flag-y"></span>
+			<span class="flag-stripe flag-b"></span>
+			<span class="flag-stripe flag-r"></span>
+		</div>
+
+		<p id="footer-title" class="footer-lede">
+			Hecho por la FGC venezolana.
+		</p>
+
+		<p class="footer-event">
+			<span class="footer-event-name">Clasificatorio para la</span>
+			<Image
+				src={encLogo}
+				alt="Esports Nations Cup"
+				class="footer-event-logo"
+				widths={[80, 160, 240]}
+			/>
+		</p>
+
+		<nav class="social" aria-label="Redes sociales">
+			{socials.map((s) => (
+				<a
+					class="social-link"
+					href={s.href}
+					aria-label={s.label}
+					target={s.href.startsWith("http") ? "_blank" : undefined}
+					rel={s.href.startsWith("http") ? "noopener noreferrer" : undefined}
+				>
+					<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+						<path fill="currentColor" d={s.path} />
+					</svg>
+				</a>
+			))}
+		</nav>
+
+		<nav class="footer-links" aria-label="Enlaces del footer">
+			<a href="#vota">Pronóstico</a>
+			<span class="footer-sep" aria-hidden="true">·</span>
+			<a href="#donar">Apoya la campaña</a>
+		</nav>
+
+		<p class="footer-fine">
+			Street Fighter es una marca registrada de Capcom Co., Ltd.<br />
+			Esports Nations Cup (ENC) es una marca de sus respectivos titulares.<br />
+			Este evento comunitario no está afiliado, patrocinado ni respaldado oficialmente por Capcom ni por la Esports Nations Cup.
+		</p>
+	</div>
+</footer>
+
+<style>
+	.site-footer {
+		position: relative;
+		margin-top: 0;
+		padding: 2.5rem 1.25rem 2.5rem;
+		background: var(--color-void-2);
+	}
+
+	.footer-inner {
+		max-width: 1100px;
+		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1.25rem;
+		text-align: center;
+	}
+
+	.footer-flag {
+		display: inline-flex;
+		height: 4px;
+		width: clamp(120px, 18vw, 220px);
+		border-radius: 2px;
+		overflow: hidden;
+		box-shadow: 0 0 0 1px var(--color-ink);
+	}
+
+	.flag-stripe {
+		flex: 1;
+		display: block;
+	}
+
+	.flag-y { background: #ffcc00; }
+	.flag-b { background: #4a7bff; }
+	.flag-r { background: #ce1126; }
+
+	.footer-lede {
+		margin: 0;
+		font-family: var(--font-body);
+		font-size: clamp(0.95rem, 1.4vw, 1.05rem);
+		color: var(--color-bone);
+		letter-spacing: 0.02em;
+	}
+
+	.ve-emoji {
+		font-size: 1.1em;
+		display: inline-block;
+		transform: translateY(1px);
+	}
+
+	.footer-event {
+		margin: 0;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.6rem;
+		font-family: var(--font-body);
+		font-size: 0.72rem;
+		letter-spacing: 0.32em;
+		text-transform: uppercase;
+		color: var(--color-ash);
+	}
+
+	.footer-event-mark {
+		font-family: var(--font-display);
+		font-size: 0.95rem;
+		letter-spacing: 0.06em;
+		color: var(--color-electric);
+		padding: 0.15rem 0.5rem;
+		border: 1px solid rgba(124, 92, 255, 0.4);
+		border-radius: 4px;
+	}
+
+	.footer-event-enc {
+		font-family: var(--font-display);
+		letter-spacing: 0.06em;
+		color: var(--color-electric);
+	}
+
+	.footer-event-logo {
+		height: clamp(22px, 2.4vw, 30px);
+		width: auto;
+		display: block;
+		filter: drop-shadow(0 0 12px rgba(124, 92, 255, 0.35));
+	}
+
+	.social {
+		display: inline-flex;
+		gap: 0.6rem;
+	}
+
+	.social-link {
+		display: grid;
+		place-items: center;
+		width: 38px;
+		height: 38px;
+		border-radius: 999px;
+		border: 1px solid var(--color-ink);
+		color: var(--color-bone);
+		text-decoration: none;
+		transition: color 200ms, border-color 200ms, background 200ms;
+	}
+
+	.social-link:hover,
+	.social-link:focus-visible {
+		color: var(--color-flame);
+		border-color: var(--color-flame);
+		background: rgba(255, 91, 31, 0.06);
+		outline: none;
+	}
+
+	.footer-links {
+		display: inline-flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		align-items: center;
+		gap: 0.6rem;
+		font-family: var(--font-body);
+		font-size: 0.78rem;
+	}
+
+	.footer-links a {
+		color: var(--color-bone);
+		text-decoration: none;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		font-weight: 600;
+		padding: 0.2rem 0;
+		border-bottom: 1px solid transparent;
+		transition: color 200ms, border-color 200ms;
+	}
+
+	.footer-links a:hover,
+	.footer-links a:focus-visible {
+		color: var(--color-flame);
+		border-bottom-color: var(--color-flame);
+		outline: none;
+	}
+
+	.footer-sep {
+		color: var(--color-ash);
+		opacity: 0.5;
+	}
+
+	.footer-fine {
+		margin: 0.5rem 0 0;
+		max-width: 640px;
+		font-family: var(--font-body);
+		font-size: 0.7rem;
+		line-height: 1.6;
+		color: var(--color-ash);
+		letter-spacing: 0.04em;
+	}
+
+	@media (max-width: 480px) {
+		.site-footer {
+			padding: 2rem 1rem 2rem;
+		}
+		.footer-event {
+			flex-direction: column;
+			gap: 0.35rem;
+		}
+		.social-link {
+			width: 36px;
+			height: 36px;
+		}
+	}
+</style>

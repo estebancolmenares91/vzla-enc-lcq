@@ -1,0 +1,172 @@
+---
+import { Image } from "astro:assets";
+import sf6Logo from "../assets/logos/sf6.png";
+import { EVENT } from "../data/event.ts";
+const target = EVENT.dateISO;
+---
+
+<header class="sticky-header">
+	<div class="header-inner">
+		<a href="#top" class="brand" aria-label="SF6 Venezuela">
+			<Image
+				src={sf6Logo}
+				alt="SF6 Venezuela"
+				class="brand-img"
+				widths={[80, 160, 320]}
+			/>
+		</a>
+
+		<div class="header-right">
+			<div
+				class="hd-clock"
+				data-target={target}
+				aria-label="Tiempo restante para el evento"
+			>
+				<span class="hd-clock-num" data-field="d">--</span><span class="hd-clock-u">D</span>
+				<span class="hd-clock-num" data-field="h">--</span><span class="hd-clock-u">H</span>
+				<span class="hd-clock-num" data-field="m">--</span><span class="hd-clock-u">M</span>
+				<span class="hd-clock-num" data-field="s">--</span><span class="hd-clock-u">S</span>
+			</div>
+			<a href="#donar" class="hd-cta">APOYAR</a>
+		</div>
+	</div>
+</header>
+
+<script>
+	const root = document.querySelector<HTMLElement>(".hd-clock");
+	if (root) {
+		const target = new Date(root.dataset.target || "").getTime();
+		const f = {
+			d: root.querySelector<HTMLElement>('[data-field="d"]'),
+			h: root.querySelector<HTMLElement>('[data-field="h"]'),
+			m: root.querySelector<HTMLElement>('[data-field="m"]'),
+			s: root.querySelector<HTMLElement>('[data-field="s"]'),
+		};
+		const pad = (n: number) => String(Math.max(0, n)).padStart(2, "0");
+		const tick = () => {
+			const diff = Math.max(0, target - Date.now());
+			const total = Math.floor(diff / 1000);
+			const d = Math.floor(total / 86400);
+			const h = Math.floor((total % 86400) / 3600);
+			const m = Math.floor((total % 3600) / 60);
+			const s = total % 60;
+			if (f.d) f.d.textContent = pad(d);
+			if (f.h) f.h.textContent = pad(h);
+			if (f.m) f.m.textContent = pad(m);
+			if (f.s) f.s.textContent = pad(s);
+		};
+		tick();
+		setInterval(tick, 1000);
+	}
+</script>
+
+<style>
+	.sticky-header {
+		position: sticky;
+		top: 0;
+		z-index: 50;
+		backdrop-filter: blur(20px) saturate(180%);
+		-webkit-backdrop-filter: blur(20px) saturate(180%);
+		background: rgba(12, 12, 20, 0.35);
+		-webkit-mask-image: linear-gradient(
+			to bottom,
+			#000 0%,
+			#000 85%,
+			transparent 100%
+		);
+		mask-image: linear-gradient(
+			to bottom,
+			#000 0%,
+			#000 85%,
+			transparent 100%
+		);
+	}
+
+	.header-inner {
+		max-width: 1280px;
+		margin: 0 auto;
+		padding: 0.9rem 1.25rem;
+		display: grid;
+		grid-template-columns: 1fr auto;
+		align-items: center;
+		gap: 1.5rem;
+	}
+
+	.brand {
+		display: inline-flex;
+		align-items: center;
+		text-decoration: none;
+	}
+
+	.brand-img {
+		width: clamp(40px, 4.5vw, 56px);
+		height: auto;
+		display: block;
+	}
+
+	.header-right {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 1rem;
+	}
+
+	.hd-clock {
+		display: inline-flex;
+		align-items: baseline;
+		gap: 0.2rem;
+		font-family: var(--font-display);
+		font-size: 0.85rem;
+		letter-spacing: 0.04em;
+		color: var(--color-gold);
+		text-transform: uppercase;
+	}
+
+	.hd-clock-num {
+		font-variant-numeric: tabular-nums;
+	}
+
+	.hd-clock-u {
+		font-family: var(--font-body);
+		font-size: 0.6rem;
+		letter-spacing: 0.18em;
+		color: var(--color-ash);
+		margin-right: 0.35rem;
+	}
+
+	.hd-cta {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.45rem 0.95rem;
+		border-radius: 999px;
+		font-family: var(--font-body);
+		font-size: 0.68rem;
+		letter-spacing: 0.22em;
+		font-weight: 700;
+		text-transform: uppercase;
+		color: var(--color-bone);
+		background: var(--color-flame);
+		text-decoration: none;
+		transition: background 180ms ease, transform 180ms ease;
+	}
+
+	.hd-cta:hover,
+	.hd-cta:focus-visible {
+		background: var(--color-flame-glow);
+		transform: translateY(-1px);
+		outline: none;
+	}
+
+	@media (max-width: 768px) {
+		.header-inner {
+			grid-template-columns: 1fr auto;
+			gap: 0.75rem;
+		}
+		.hd-clock {
+			display: none;
+		}
+		.header-right {
+			justify-content: flex-end;
+		}
+	}
+</style>

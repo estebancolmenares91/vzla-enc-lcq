@@ -1,0 +1,149 @@
+---
+import { EVENT } from "../data/event.ts";
+const target = EVENT.dateISO;
+---
+
+<section class="countdown" aria-labelledby="countdown-title">
+	<p id="countdown-title" class="cd-eyebrow">CONTEO REGRESIVO PARA EL IMPACTO</p>
+
+	<div
+		class="cd-clock"
+		data-target={target}
+		aria-label="Cuenta regresiva al evento"
+	>
+		<div class="cd-block">
+			<span class="cd-num" data-field="d">--</span>
+			<span class="cd-label">DÍAS</span>
+		</div>
+		<span class="cd-sep">:</span>
+		<div class="cd-block">
+			<span class="cd-num" data-field="h">--</span>
+			<span class="cd-label">HORAS</span>
+		</div>
+		<span class="cd-sep">:</span>
+		<div class="cd-block">
+			<span class="cd-num" data-field="m">--</span>
+			<span class="cd-label">MINUTOS</span>
+		</div>
+	</div>
+
+	<p class="cd-when">
+		<span>{EVENT.dateLabel}</span>
+		<span class="cd-when-sep" aria-hidden="true">·</span>
+		<span>{EVENT.timeLabel}</span>
+	</p>
+</section>
+
+<script>
+	const root = document.querySelector<HTMLElement>(".cd-clock");
+	if (root) {
+		const target = new Date(root.dataset.target || "").getTime();
+		const f = {
+			d: root.querySelector<HTMLElement>('[data-field="d"]'),
+			h: root.querySelector<HTMLElement>('[data-field="h"]'),
+			m: root.querySelector<HTMLElement>('[data-field="m"]'),
+		};
+		const pad = (n: number) => String(Math.max(0, n)).padStart(2, "0");
+		const tick = () => {
+			const diff = Math.max(0, target - Date.now());
+			const s = Math.floor(diff / 1000);
+			if (f.d) f.d.textContent = pad(Math.floor(s / 86400));
+			if (f.h) f.h.textContent = pad(Math.floor((s % 86400) / 3600));
+			if (f.m) f.m.textContent = pad(Math.floor((s % 3600) / 60));
+		};
+		tick();
+		setInterval(tick, 1000);
+	}
+</script>
+
+<style>
+	.countdown {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1rem;
+		padding: 1.5rem 1rem 2rem;
+		text-align: center;
+	}
+
+	.cd-eyebrow {
+		margin: 0;
+		font-family: var(--font-body);
+		font-size: 0.7rem;
+		letter-spacing: 0.42em;
+		color: var(--color-ash);
+		text-transform: uppercase;
+	}
+
+	.cd-clock {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 1rem 1.5rem;
+		background: transparent;
+		border: 0;
+		border-radius: 8px;
+		box-shadow:
+			inset 0 0 30px rgba(25, 227, 255, 0.05),
+			0 0 30px rgba(255, 91, 31, 0.08);
+	}
+
+	.cd-block {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		min-width: 64px;
+	}
+
+	.cd-num {
+		font-family: var(--font-display);
+		font-size: clamp(2.5rem, 5vw, 3.5rem);
+		line-height: 1;
+		color: var(--color-bone);
+		letter-spacing: -0.02em;
+	}
+
+	.cd-label {
+		margin-top: 0.35rem;
+		font-family: var(--font-body);
+		font-size: 0.6rem;
+		letter-spacing: 0.32em;
+		color: var(--color-ash);
+		text-transform: uppercase;
+	}
+
+	.cd-sep {
+		font-family: var(--font-display);
+		font-size: clamp(2rem, 4vw, 3rem);
+		color: var(--color-flame);
+		animation: blink 1s steps(2) infinite;
+		align-self: flex-start;
+		padding-top: 0.4rem;
+	}
+
+	.cd-when {
+		margin: 0.25rem 0 0;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.6rem;
+		font-family: var(--font-body);
+		font-size: clamp(0.72rem, 1.1vw, 0.85rem);
+		letter-spacing: 0.28em;
+		color: var(--color-ash);
+		text-transform: uppercase;
+	}
+
+	.cd-when-sep {
+		color: var(--color-ink);
+	}
+
+	@media (max-width: 480px) {
+		.cd-clock {
+			padding: 0.75rem 1rem;
+			gap: 0.5rem;
+		}
+		.cd-block {
+			min-width: 50px;
+		}
+	}
+</style>

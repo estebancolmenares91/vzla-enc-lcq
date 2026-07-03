@@ -1,0 +1,359 @@
+---
+import { EVENT } from "../data/event.ts";
+
+const pct = Math.max(0, Math.min(100, Math.round((EVENT.raisedUSD / EVENT.goalUSD) * 100)));
+const raisedFmt = new Intl.NumberFormat("en-US").format(EVENT.raisedUSD);
+const goalFmt = new Intl.NumberFormat("en-US").format(EVENT.goalUSD);
+const gofundmeApiUrl = (import.meta.env.PUBLIC_GOFUNDME_API_URL ?? "").trim();
+---
+
+<section id="donar" class="donation" aria-labelledby="donation-title" data-gofundme-api={gofundmeApiUrl || undefined}>
+	<div class="donation-inner">
+		<p class="eyebrow reveal">FGC VENEZOLANA · TERREMOTO 24/06/2026</p>
+
+		<h2 id="donation-title" class="title reveal">
+			POR LOS <span class="title-accent">NUESTROS</span>
+		</h2>
+
+		<p class="subtitle reveal">Los TOs de la FGC venezolana nos unimos por los nuestros. El terremoto del 24 de junio golpeó a nuestra escena. Hoy lamentamos la pérdida de <strong>HBKing</strong> y confirmamos tres hogares FGC destruidos: <strong>Kenny "KaioKen"</strong>, <strong>Raider "Berserker"</strong> y <strong>Joshua "Joshynorth"</strong>. Tu aporte llega directo a estas familias — sin intermediarios.</p>
+
+		<p class="body reveal">
+			Lo recaudado se entrega directamente a las familias afectadas, sin
+			intermediarios. Primer milestone urgente: <strong>$18,000</strong> — techo,
+			alimentación, medicinas y servicios por hogar. Si confirmamos más casos
+			durante el mapeo, la meta sube y rendimos cuentas de cada dólar, paso a
+			paso. Domotai Technologies LLC apoya con logística pero no recauda ni
+			administra fondos. 100% a la FGC.
+		</p>
+
+		<div
+			class="meta reveal"
+			role="group"
+			aria-label={`Progreso de la campaña: ${raisedFmt} dólares recaudados de ${goalFmt}`}
+		>
+			<div class="meta-header">
+				<span class="meta-label">META DE AYUDA</span>
+				<span class="meta-amount">${raisedFmt} <span class="meta-amount-sep">/</span> ${goalFmt}</span>
+			</div>
+			<div
+				class="meta-bar"
+				role="progressbar"
+				aria-valuemin="0"
+				aria-valuemax="100"
+				aria-valuenow={pct}
+			>
+				<div class="meta-fill" style={`width: ${pct}%`}></div>
+			</div>
+			<p class="meta-caption">
+				Fondo destinado a víveres, medicina, rescate y refugio para los
+				afectados — con foco en la FGC.
+			</p>
+		</div>
+
+		<a
+			class="cta reveal"
+			href={EVENT.gofundme}
+			target="_blank"
+			rel="noopener noreferrer"
+			aria-label="Apoyar a la FGC venezolana en GoFundMe (abre en nueva pestaña)"
+		>
+			<span>APOYAR A LOS NUESTROS EN GOFUNDME</span>
+			<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+				<path
+					fill="currentColor"
+					d="M5 12h12l-4-4 1.4-1.4L20.8 12l-6.4 5.4L13 16l4-4H5v-1Z"
+				/>
+			</svg>
+		</a>
+
+		<p class="badge reveal">
+			<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+				<path
+					fill="currentColor"
+					d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5Zm-3 8V6a3 3 0 0 1 6 0v3H9Zm3 4a2 2 0 0 1 1 3.7V19h-2v-2.3A2 2 0 0 1 12 13Z"
+				/>
+			</svg>
+			<span>Pago seguro vía GoFundMe · 100% ayuda humanitaria</span>
+		</p>
+
+		<p class="closing reveal">
+			DE LA FGC, PARA LA FGC. SIEMPRE NOS HEMOS CUIDADO ENTRE SÍ.
+		</p>
+	</div>
+</section>
+
+<script>
+	const section = document.querySelector(".donation");
+	if (section) {
+		const reveals = section.querySelectorAll(".reveal");
+		if ("IntersectionObserver" in window) {
+			const io = new IntersectionObserver(function (entries) {
+				entries.forEach(function (e) {
+					if (e.isIntersecting) {
+						e.target.classList.add("is-visible");
+						io.unobserve(e.target);
+					}
+				});
+			}, { threshold: 0.12 });
+			reveals.forEach(function (r) { io.observe(r); });
+		} else {
+			reveals.forEach(function (r) { r.classList.add("is-visible"); });
+		}
+
+		const apiUrl = section.getAttribute("data-gofundme-api");
+		const meta = section.querySelector(".meta");
+		const amount = meta ? meta.querySelector(".meta-amount") : null;
+		const fill = meta ? (meta.querySelector(".meta-fill") as HTMLElement | null) : null;
+		const bar = meta ? meta.querySelector('[role="progressbar"]') : null;
+
+		if (apiUrl && meta && amount && fill && bar) {
+			fetch(apiUrl, { method: "GET" })
+				.then(function (res) { return res.ok ? res.json() : null; })
+				.then(function (data) {
+					if (!data) return;
+					if (typeof data.raised !== "number") return;
+					if (typeof data.goal !== "number" || data.goal <= 0) return;
+					const raised = Math.round(data.raised);
+					const goal = Math.round(data.goal);
+					const raisedFmt = new Intl.NumberFormat("en-US").format(raised);
+					const goalFmt = new Intl.NumberFormat("en-US").format(goal);
+					amount.innerHTML = "$" + raisedFmt + ' <span class="meta-amount-sep">/</span> $' + goalFmt;
+					const pct = Math.max(0, Math.min(100, Math.round((raised / goal) * 100)));
+					fill.style.width = pct + "%";
+					bar.setAttribute("aria-valuenow", String(pct));
+					bar.setAttribute(
+						"aria-label",
+						"Progreso de la campaña: " + raisedFmt + " dólares recaudados de " + goalFmt,
+					);
+					if (typeof data.donors === "number") {
+						meta.setAttribute(
+							"aria-label",
+							"Progreso de la campaña: " + raisedFmt + " dólares recaudados de " + goalFmt + " con " + data.donors + " donantes",
+						);
+					}
+				})
+				.catch(function () { /* silent fail — SSR fallback */ });
+		}
+	}
+</script>
+
+<style>
+	.donation {
+		position: relative;
+		padding: 5rem 1.25rem 2.5rem;
+		background: var(--color-void-2);
+	}
+
+	.donation-inner {
+		max-width: 720px;
+		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		gap: 1.75rem;
+	}
+
+	.eyebrow {
+		margin: 0;
+		font-family: var(--font-body);
+		font-size: 0.78rem;
+		font-weight: 600;
+		letter-spacing: 0.3em;
+		text-transform: uppercase;
+		color: var(--color-gold);
+	}
+
+	.title {
+		margin: 0;
+		font-family: var(--font-display);
+		font-size: clamp(2.5rem, 6vw, 4rem);
+		line-height: 1;
+		letter-spacing: -0.02em;
+		text-transform: uppercase;
+		color: var(--color-bone);
+	}
+
+	.title-accent {
+		color: var(--color-gold);
+	}
+
+	.subtitle,
+	.body {
+		margin: 0;
+		font-family: var(--font-body);
+		line-height: 1.65;
+		color: var(--color-bone);
+		max-width: 38rem;
+		text-align: left;
+	}
+
+	.subtitle strong,
+	.body strong {
+		margin-right: 0.15em;
+	}
+
+	.subtitle {
+		font-size: clamp(1rem, 1.4vw, 1.15rem);
+		color: var(--color-ash);
+	}
+
+	.body {
+		font-size: clamp(0.95rem, 1.15vw, 1.05rem);
+	}
+
+	.meta {
+		width: 100%;
+		max-width: 36rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.meta-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 1rem;
+		font-family: var(--font-body);
+	}
+
+	.meta-label {
+		font-size: 0.7rem;
+		letter-spacing: 0.3em;
+		text-transform: uppercase;
+		color: var(--color-ash);
+		font-weight: 600;
+	}
+
+	.meta-amount {
+		font-family: var(--font-display);
+		font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+		letter-spacing: 0.02em;
+		color: var(--color-bone);
+	}
+
+	.meta-amount-sep {
+		color: var(--color-ink);
+		margin: 0 0.2rem;
+	}
+
+	.meta-bar {
+		width: 100%;
+		height: 4px;
+		background: var(--color-ink);
+		border-radius: 999px;
+		overflow: hidden;
+	}
+
+	.meta-fill {
+		height: 100%;
+		background: var(--color-gold);
+		border-radius: 999px;
+		transition: width 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+	}
+
+	.meta-caption {
+		margin: 0.4rem 0 0;
+		font-family: var(--font-body);
+		font-size: 0.78rem;
+		line-height: 1.5;
+		color: var(--color-ash);
+		text-align: center;
+	}
+
+	.cta {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.6rem;
+		width: 100%;
+		max-width: 36rem;
+		height: 3.5rem;
+		padding: 0 1.5rem;
+		background: var(--color-gold);
+		color: var(--color-void);
+		font-family: var(--font-body);
+		font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+		font-weight: 600;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		text-decoration: none;
+		border-radius: 999px;
+		transition:
+			transform 200ms ease,
+			filter 200ms ease;
+	}
+
+	.cta:hover,
+	.cta:focus-visible {
+		transform: translateY(-2px);
+		filter: brightness(1.05);
+		outline: none;
+	}
+
+	.cta:focus-visible {
+		outline: 2px solid var(--color-flame);
+		outline-offset: 3px;
+	}
+
+	.cta svg {
+		transition: transform 200ms ease;
+	}
+
+	.cta:hover svg,
+	.cta:focus-visible svg {
+		transform: translateX(3px);
+	}
+
+	.badge {
+		margin: 0;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.45rem;
+		font-family: var(--font-body);
+		font-size: 0.72rem;
+		color: var(--color-ash);
+		letter-spacing: 0.04em;
+	}
+
+	.closing {
+		margin: 0.5rem 0 0;
+		font-family: var(--font-body);
+		font-size: 0.7rem;
+		letter-spacing: 0.3em;
+		text-transform: uppercase;
+		color: var(--color-ash);
+	}
+
+	@media (max-width: 640px) {
+		.donation {
+			padding: 3.5rem 1rem 2rem;
+		}
+		.donation-inner {
+			gap: 1.5rem;
+		}
+		.meta-header {
+			font-size: 0.65rem;
+		}
+		.title {
+			letter-spacing: -0.01em;
+		}
+		.cta {
+			height: auto;
+			min-height: 3.25rem;
+			padding: 0.75rem 1.25rem;
+			font-size: 0.82rem;
+			letter-spacing: 0.06em;
+			white-space: normal;
+			text-align: center;
+			line-height: 1.3;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.meta-fill {
+			transition: none;
+		}
+	}
+</style>

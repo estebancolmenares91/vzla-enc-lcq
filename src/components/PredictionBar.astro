@@ -1,0 +1,1389 @@
+---
+import { P1, P2, EVENT } from "../data/event.ts";
+import AuthBar from "./AuthBar.astro";
+
+const charMap = { deejay: "/chars/deejay.webp", zangief: "/chars/zangief.webp" } as const;
+---
+
+<section class="prediction reveal" id="vota" aria-labelledby="prediction-title">
+	<header class="pred-head">
+		<div class="pred-head-left">
+			<p class="pred-eyebrow">PRONÓSTICO DE LA COMUNIDAD</p>
+			<h2 id="prediction-title" class="pred-title">
+				¿QUIÉN <span class="pred-title-accent">SE LLEVA</span> EL PUESTO?
+			</h2>
+		</div>
+		<div class="pred-head-right">
+			<span class="pred-votes-num" data-votes>0</span>
+			<span class="pred-votes-label">votos</span>
+		</div>
+	</header>
+
+	<div
+		class="lifebar"
+		role="group"
+		aria-label="Porcentaje de votos por jugador"
+		data-p1={P1.pct}
+		data-p2={P2.pct}
+	>
+		<div class="lifebar-fill lifebar-fill--p1" data-fill="p1" style={`width: ${P1.pct}%`}>
+			<div class="lifebar-ticks" aria-hidden="true"></div>
+		</div>
+		<div class="lifebar-fill lifebar-fill--p2" data-fill="p2" style={`width: ${P2.pct}%`}>
+			<div class="lifebar-ticks" aria-hidden="true"></div>
+		</div>
+		<div class="lifebar-center" aria-hidden="true">
+			<span class="lifebar-vs">VS</span>
+		</div>
+	</div>
+
+	<div class="pred-figures">
+		<figure class="pred-figure pred-figure--p1">
+			<div class="pred-figure-char">
+				<img src={charMap.deejay} alt="" class="pred-figure-char-img" />
+			</div>
+			<figcaption>
+				<div class="pred-figure-name">{P1.name}</div>
+				<div class="pred-figure-pct" data-pct="p1">{P1.pct}%</div>
+			</figcaption>
+		</figure>
+
+		<figure class="pred-figure pred-figure--p2">
+			<figcaption>
+				<div class="pred-figure-name">{P2.name}</div>
+				<div class="pred-figure-pct" data-pct="p2">{P2.pct}%</div>
+			</figcaption>
+			<div class="pred-figure-char">
+				<img src={charMap.zangief} alt="" class="pred-figure-char-img" />
+			</div>
+		</figure>
+	</div>
+
+	<p class="pred-ticker" data-ticker>
+		LA COMUNIDAD DICE: <strong data-leader>PELEA TÉCNICA</strong>
+	</p>
+
+	<AuthBar />
+
+	<section class="pred-feed" aria-labelledby="pred-feed-title">
+		<header class="pred-feed-head">
+			<h3 id="pred-feed-title" class="pred-feed-title">Últimos votos de la comunidad</h3>
+			<span class="pred-feed-count" data-feed-count>0 aportes</span>
+		</header>
+		<ul class="pred-feed-list" data-feed-list role="list">
+			<li class="pred-feed-empty" data-feed-empty>Cuando alguien vote, aparecerá aquí.</li>
+		</ul>
+	</section>
+
+	<div class="pred-stage" data-stage="pick">
+		<div class="pred-actions">
+			<button type="button" class="pred-vote pred-vote--p1" data-pick-vote="p1">
+				<img
+					src={charMap.deejay}
+					alt=""
+					class="pred-vote-char"
+					aria-hidden="true"
+					loading="lazy"
+					decoding="async"
+				/>
+				<span class="pred-vote-label">APOYO A {P1.name}</span>
+			</button>
+			<button type="button" class="pred-vote pred-vote--p2" data-pick-vote="p2">
+				<span class="pred-vote-label">APOYO A {P2.name}</span>
+				<img
+					src={charMap.zangief}
+					alt=""
+					class="pred-vote-char"
+					aria-hidden="true"
+					loading="lazy"
+					decoding="async"
+				/>
+			</button>
+		</div>
+	</div>
+
+	<div class="pred-stage pred-stage--form" data-stage="form" data-side="p1" hidden>
+		<header class="pred-form-head">
+			<p class="pred-form-eyebrow">CONFIRMA TU APOYO</p>
+			<h3 class="pred-form-title">
+				Vas con <span class="pred-form-player" data-form-player>—</span>
+			</h3>
+		</header>
+
+		<form class="pred-form-body" data-form-el>
+			<label class="pred-field">
+				<span class="pred-field-label">Tu tag o gamertag</span>
+				<input
+					type="text"
+					name="tag"
+					data-input-tag
+					placeholder="Ej. mentirouen"
+					autocomplete="off"
+					required
+					minlength="2"
+					maxlength="32"
+				/>
+				<span class="pred-field-hint">
+					Este tag viene de tu cuenta. Si quieres, puedes editarlo.
+				</span>
+			</label>
+
+			<fieldset class="pred-field pred-field--amount">
+				<legend class="pred-field-label">¿Cuánto vas a aportar al GoFundMe?</legend>
+				<div class="pred-chips" role="group" aria-label="Montos predeterminados">
+					<button type="button" class="pred-chip" data-amt="5" aria-pressed="false">$5</button>
+					<button type="button" class="pred-chip" data-amt="10" aria-pressed="false">$10</button>
+					<button type="button" class="pred-chip" data-amt="25" aria-pressed="false">$25</button>
+					<button type="button" class="pred-chip" data-amt="50" aria-pressed="false">$50</button>
+				</div>
+				<label class="pred-custom-amt">
+					<span class="pred-custom-prefix">$</span>
+					<input
+						type="number"
+						name="amount"
+						data-input-amt
+						placeholder="Custom"
+						min="1"
+						max="10000"
+						step="1"
+						inputmode="numeric"
+					/>
+				</label>
+				<span class="pred-field-hint">
+					Este monto llega 100% a los nuestros a través de GoFundMe — sin intermediarios.
+				</span>
+			</fieldset>
+
+			<div class="pred-form-actions">
+				<button type="button" class="pred-cancel" data-cancel>← Cambiar jugador</button>
+				<button type="submit" class="pred-submit" data-submit>
+					<span>Confirmar voto</span>
+					<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+						<path fill="currentColor" d="M5 12h12l-4-4 1.4-1.4L20.8 12l-6.4 5.4L13 16l4-4H5v-1Z" />
+					</svg>
+				</button>
+			</div>
+		</form>
+	</div>
+
+	<div class="pred-stage pred-stage--done" data-stage="done" hidden>
+		<svg class="pred-done-check" viewBox="0 0 24 24" width="36" height="36" aria-hidden="true">
+			<path
+				fill="none"
+				stroke="currentColor"
+				stroke-width="3"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				d="m5 12 5 5 9-11"
+			/>
+		</svg>
+		<p class="pred-done-eyebrow">YA PRONOSTICASTE</p>
+		<p class="pred-done-line">
+			Apoyas a <strong data-done-player>—</strong> con
+			<strong data-done-amount>—</strong>
+		</p>
+		<p class="pred-done-tag">
+			como <strong data-done-tag>—</strong>
+		</p>
+		<a
+			class="pred-done-go"
+			href={EVENT.gofundme}
+			target="_blank"
+			rel="noopener noreferrer"
+			aria-label="Completar aporte en GoFundMe (abre en nueva pestaña)"
+		>
+			<span>Completar aporte en GoFundMe</span>
+			<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+				<path fill="currentColor" d="M5 12h12l-4-4 1.4-1.4L20.8 12l-6.4 5.4L13 16l4-4H5v-1Z" />
+			</svg>
+		</a>
+	</div>
+</section>
+
+<script>
+	import type { User } from "@supabase/supabase-js";
+	import { supabase, SUPABASE_ENABLED } from "../lib/supabase";
+	import {
+		signInWith,
+		onAuthChange,
+		getDisplayName,
+	} from "../lib/auth";
+	import {
+		fetchRecentVotes,
+		countVotesBySide,
+		fetchMyVote,
+		insertVote,
+		subscribeVotes,
+		isUniqueViolation,
+		type Vote,
+		type Side,
+	} from "../lib/votes";
+
+	type Stage = "pick" | "form" | "done";
+
+	const PLAYER_LABEL: Record<Side, string> = {
+		p1: "CELFCOOL",
+		p2: "FOREVERCARLONE",
+	};
+
+	const CHAR_IMG: Record<Side, string> = {
+		p1: "/chars/deejay.webp",
+		p2: "/chars/zangief.webp",
+	};
+
+	const FEED_LIMIT = 8;
+	const STORAGE_KEY = "enc_vote_id_v1";
+
+	const root = document.querySelector<HTMLElement>(".prediction");
+	if (root) {
+		const fills = {
+			p1: root.querySelector<HTMLElement>('[data-fill="p1"]'),
+			p2: root.querySelector<HTMLElement>('[data-fill="p2"]'),
+		};
+		const pcts = {
+			p1: root.querySelector<HTMLElement>('[data-pct="p1"]'),
+			p2: root.querySelector<HTMLElement>('[data-pct="p2"]'),
+		};
+		const leaderEl = root.querySelector<HTMLElement>("[data-leader]");
+		const votesEl = root.querySelector<HTMLElement>("[data-votes]");
+		const stages = {
+			pick: root.querySelector<HTMLElement>('[data-stage="pick"]'),
+			form: root.querySelector<HTMLElement>('[data-stage="form"]'),
+			done: root.querySelector<HTMLElement>('[data-stage="done"]'),
+		};
+		const formEl = root.querySelector<HTMLFormElement>("[data-form-el]");
+		const formPlayer = root.querySelector<HTMLElement>("[data-form-player]");
+		const inputTag = root.querySelector<HTMLInputElement>("[data-input-tag]");
+		const inputAmt = root.querySelector<HTMLInputElement>("[data-input-amt]");
+		const chipButtons = root.querySelectorAll<HTMLButtonElement>("[data-amt]");
+		const donePlayer = root.querySelector<HTMLElement>("[data-done-player]");
+		const doneAmount = root.querySelector<HTMLElement>("[data-done-amount]");
+		const doneTag = root.querySelector<HTMLElement>("[data-done-tag]");
+		const feedList = root.querySelector<HTMLElement>("[data-feed-list]");
+		const feedEmpty = root.querySelector<HTMLElement>("[data-feed-empty]");
+		const feedCount = root.querySelector<HTMLElement>("[data-feed-count]");
+
+		let pct1 = 50;
+		let pct2 = 50;
+		let p1Count = 0;
+		let p2Count = 0;
+		let total = 0;
+		let currentSide: Side = "p1";
+		let currentAmount = 10;
+		let currentUser: User | null = null;
+		let userRecord: Vote | null = null;
+		let unsubscribeRealtime: (() => void) | null = null;
+
+		const escapeHtml = (s: string): string =>
+			s
+				.replace(/&/g, "&amp;")
+				.replace(/</g, "&lt;")
+				.replace(/>/g, "&gt;")
+				.replace(/"/g, "&quot;")
+				.replace(/'/g, "&#39;");
+
+		const formatAgoIso = (iso: string): string => {
+			const diff = (Date.now() - new Date(iso).getTime()) / 60000;
+			if (diff < 1) return "ahora";
+			if (diff < 60) return `hace ${Math.round(diff)} min`;
+			const h = diff / 60;
+			if (h < 24) return `hace ${Math.round(h)} h`;
+			return `hace ${Math.round(h / 24)} d`;
+		};
+
+		const renderFeedItem = (v: Vote): string => `
+			<li class="pred-feed-item pred-feed-item--${v.side}">
+				<span class="pred-feed-char" aria-hidden="true">
+					<img src="${CHAR_IMG[v.side]}" alt="" class="pred-feed-img" loading="lazy" decoding="async" />
+				</span>
+				<span class="pred-feed-body">
+					<span class="pred-feed-tag">${escapeHtml(v.tag)}</span>
+					<span class="pred-feed-meta">apoyó a <strong class="pred-feed-gt">${PLAYER_LABEL[v.side]}</strong> · ${formatAgoIso(v.created_at)}</span>
+				</span>
+				<span class="pred-feed-amount pred-feed-amount--${v.side}">$${v.amount}</span>
+			</li>
+		`;
+
+		const setBar = () => {
+			if (fills.p1) fills.p1.style.width = `${pct1}%`;
+			if (fills.p2) fills.p2.style.width = `${pct2}%`;
+			if (pcts.p1) pcts.p1.textContent = `${pct1}%`;
+			if (pcts.p2) pcts.p2.textContent = `${pct2}%`;
+			if (leaderEl) {
+				if (pct1 > pct2) leaderEl.textContent = `${PLAYER_LABEL.p1} LLEVA LA VENTAJA`;
+				else if (pct2 > pct1)
+					leaderEl.textContent = `${PLAYER_LABEL.p2} LLEVA LA VENTAJA`;
+				else leaderEl.textContent = "¡PELEA TÉCNICA! IMPASABLE";
+			}
+		};
+
+		const updateTotals = () => {
+			if (votesEl) votesEl.textContent = total.toLocaleString("es-VE");
+			if (feedCount)
+				feedCount.textContent = `${total} ${total === 1 ? "aporte" : "aportes"}`;
+		};
+
+		const recalcPcts = () => {
+			const sum = p1Count + p2Count;
+			if (sum === 0) {
+				pct1 = 50;
+				pct2 = 50;
+			} else {
+				pct1 = Math.round((p1Count / sum) * 100);
+				pct2 = 100 - pct1;
+			}
+			setBar();
+		};
+
+		const flash = (side: Side) => {
+			const el = side === "p1" ? fills.p2 : fills.p1;
+			if (!el) return;
+			el.classList.remove("is-hit");
+			void el.offsetWidth;
+			el.classList.add("is-hit");
+			setTimeout(() => el.classList.remove("is-hit"), 250);
+		};
+
+		const showStage = (name: Stage) => {
+			stages.pick?.toggleAttribute("hidden", name !== "pick");
+			stages.form?.toggleAttribute("hidden", name !== "form");
+			stages.done?.toggleAttribute("hidden", name !== "done");
+		};
+
+		const setActiveChip = (amt: number) => {
+			chipButtons.forEach((b) => {
+				const v = Number(b.dataset.amt);
+				b.classList.toggle("is-active", v === amt);
+				b.setAttribute("aria-pressed", v === amt ? "true" : "false");
+			});
+		};
+
+		const openForm = (side: Side) => {
+			if (userRecord) return;
+			if (!currentUser) {
+				const provider = "google";
+				signInWith(provider).catch((e: unknown) => console.error("signIn error", e));
+				return;
+			}
+			currentSide = side;
+			if (formPlayer) formPlayer.textContent = PLAYER_LABEL[side];
+			stages.form?.setAttribute("data-side", side);
+			showStage("form");
+			if (inputAmt && !inputAmt.value) inputAmt.value = String(currentAmount);
+			setActiveChip(currentAmount);
+			if (inputTag && !inputTag.value) {
+				inputTag.value = getDisplayName(currentUser);
+			}
+			setTimeout(() => inputTag?.focus(), 50);
+		};
+
+		const cancelForm = () => {
+			showStage("pick");
+		};
+
+		const submitVote = async () => {
+			if (userRecord || !currentUser) return;
+			const tag = (inputTag?.value || "").trim();
+			const amtRaw = Number(inputAmt?.value || "0");
+			const amount = Math.max(1, Math.min(10000, amtRaw || currentAmount));
+			if (tag.length < 2) {
+				inputTag?.focus();
+				return;
+			}
+
+			try {
+				const vote = await insertVote(
+					{ tag, side: currentSide, amount },
+					currentUser,
+				);
+				userRecord = vote;
+				try {
+					localStorage.setItem(STORAGE_KEY, vote.id);
+				} catch (_) { /* noop */ }
+				total += 1;
+				if (currentSide === "p1") p1Count++;
+				else p2Count++;
+				updateTotals();
+				recalcPcts();
+				flash(currentSide);
+				if (donePlayer) donePlayer.textContent = PLAYER_LABEL[currentSide];
+				if (doneAmount) doneAmount.textContent = `$${amount}`;
+				if (doneTag) doneTag.textContent = tag;
+				showStage("done");
+				prependFeedItem(vote);
+			} catch (e: unknown) {
+				if (isUniqueViolation(e as Error)) {
+					await loadMyVote();
+				} else {
+					console.error("submitVote error", e);
+				}
+			}
+		};
+
+		const prependFeedItem = (v: Vote) => {
+			if (!feedList) return;
+			feedEmpty?.remove();
+			feedList.insertAdjacentHTML("afterbegin", renderFeedItem(v));
+			while (feedList.children.length > FEED_LIMIT) {
+				feedList.lastElementChild?.remove();
+			}
+		};
+
+		const loadFeed = async () => {
+			if (!feedList) return;
+			try {
+				const votes = await fetchRecentVotes(FEED_LIMIT);
+				if (votes.length === 0) {
+					feedList.innerHTML = `<li class="pred-feed-empty" data-feed-empty>Cuando alguien vote, aparecerá aquí.</li>`;
+				} else {
+					feedList.innerHTML = votes.map(renderFeedItem).join("");
+				}
+			} catch (e: unknown) {
+				console.error("loadFeed error", e);
+				feedList.innerHTML = `<li class="pred-feed-empty">No se pudo cargar la lista.</li>`;
+			}
+		};
+
+		const loadStats = async () => {
+			try {
+				const { p1, p2 } = await countVotesBySide();
+				p1Count = p1;
+				p2Count = p2;
+				total = p1 + p2;
+				updateTotals();
+				recalcPcts();
+			} catch (e: unknown) {
+				console.error("loadStats error", e);
+			}
+		};
+
+		const loadMyVote = async () => {
+			if (!currentUser) return;
+			try {
+				const my = await fetchMyVote(currentUser.id);
+				if (my) {
+					userRecord = my;
+					currentSide = my.side;
+					if (donePlayer) donePlayer.textContent = PLAYER_LABEL[my.side];
+					if (doneAmount) doneAmount.textContent = `$${my.amount}`;
+					if (doneTag) doneTag.textContent = my.tag;
+					showStage("done");
+				}
+			} catch (e: unknown) {
+				console.error("loadMyVote error", e);
+			}
+		};
+
+		const initRealtime = () => {
+			if (unsubscribeRealtime) return;
+			unsubscribeRealtime = subscribeVotes((vote) => {
+				if (currentUser && vote.user_id === currentUser.id) return;
+				total += 1;
+				if (vote.side === "p1") p1Count++;
+				else p2Count++;
+				updateTotals();
+				recalcPcts();
+				prependFeedItem(vote);
+			});
+		};
+
+		chipButtons.forEach((b) => {
+			b.addEventListener("click", () => {
+				const v = Number(b.dataset.amt);
+				if (!Number.isFinite(v)) return;
+				currentAmount = v;
+				if (inputAmt) inputAmt.value = String(v);
+				setActiveChip(v);
+			});
+		});
+
+		inputAmt?.addEventListener("input", () => {
+			const v = Number(inputAmt.value);
+			if (Number.isFinite(v) && v > 0) {
+				currentAmount = v;
+				setActiveChip(v);
+			} else {
+				setActiveChip(NaN);
+			}
+		});
+
+		root
+			.querySelectorAll<HTMLButtonElement>("[data-pick-vote]")
+			.forEach((btn) => {
+				btn.addEventListener("click", () => {
+					const v = btn.dataset.pickVote as Side | undefined;
+					if (v) openForm(v);
+				});
+			});
+
+		root
+			.querySelector<HTMLButtonElement>("[data-cancel]")
+			?.addEventListener("click", cancelForm);
+		formEl?.addEventListener("submit", (e) => {
+			e.preventDefault();
+			void submitVote();
+		});
+
+		setBar();
+
+		if (SUPABASE_ENABLED && supabase) {
+			void loadFeed();
+			void loadStats();
+			onAuthChange((user) => {
+				currentUser = user;
+				if (user) {
+					void loadMyVote();
+				} else {
+					userRecord = null;
+					try {
+						localStorage.removeItem(STORAGE_KEY);
+					} catch (_) { /* noop */ }
+					showStage("pick");
+				}
+			});
+			supabase.auth.getUser().then(({ data }) => {
+				currentUser = data.user;
+				if (currentUser) void loadMyVote();
+			});
+			initRealtime();
+		} else {
+			// Fallback sin Supabase: ocultar el form para que el usuario sepa que no puede votar
+			stages.pick?.setAttribute("hidden", "");
+			const msg = document.createElement("p");
+			msg.className = "pred-feed-empty";
+			msg.style.textAlign = "center";
+			msg.style.color = "var(--color-flame)";
+			msg.textContent = "Las votaciones están deshabilitadas. Configura Supabase para habilitarlas.";
+			stages.pick?.parentElement?.insertBefore(msg, stages.pick);
+		}
+	}
+</script>
+
+<style is:global>
+	.prediction {
+		position: relative;
+		max-width: 1100px;
+		margin: 2.5rem auto 4rem;
+		padding: 1.75rem 1.5rem 2rem;
+		background: transparent;
+		border: 0;
+		border-radius: 10px;
+	}
+
+	.pred-head {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-end;
+		gap: 1rem;
+		margin-bottom: 1.25rem;
+		flex-wrap: wrap;
+	}
+
+	.pred-eyebrow {
+		margin: 0 0 0.4rem;
+		font-family: var(--font-body);
+		font-size: 0.7rem;
+		letter-spacing: 0.42em;
+		color: var(--color-ash);
+		text-transform: uppercase;
+	}
+
+	.pred-title {
+		margin: 0;
+		font-family: var(--font-display);
+		font-size: clamp(1.5rem, 2.6vw, 2rem);
+		text-transform: uppercase;
+		letter-spacing: -0.01em;
+		line-height: 1;
+	}
+
+	.pred-title-accent {
+		background: linear-gradient(90deg, var(--color-cyan), var(--color-flame));
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
+	}
+
+	.pred-head-right {
+		display: flex;
+		align-items: baseline;
+		gap: 0.35rem;
+		color: var(--color-ash);
+		font-family: var(--font-body);
+	}
+
+	.pred-votes-num {
+		font-family: var(--font-display);
+		font-size: 1.1rem;
+		color: var(--color-bone);
+		letter-spacing: 0.05em;
+	}
+
+	.pred-votes-label {
+		font-size: 0.7rem;
+		letter-spacing: 0.3em;
+		text-transform: uppercase;
+	}
+
+	.lifebar {
+		position: relative;
+		display: flex;
+		width: 100%;
+		height: 56px;
+		border: 1px solid var(--color-ink);
+		border-radius: 6px;
+		overflow: hidden;
+		background: var(--color-void-2);
+		box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6);
+	}
+
+	.lifebar-fill {
+		position: relative;
+		height: 100%;
+		transition: width 600ms cubic-bezier(0.2, 0.8, 0.2, 1);
+	}
+
+	.lifebar-fill--p1 {
+		background: linear-gradient(90deg, var(--color-cyan) 0%, rgba(25, 227, 255, 0.25) 100%);
+		box-shadow: inset 0 0 18px rgba(25, 227, 255, 0.4);
+	}
+
+	.lifebar-fill--p2 {
+		background: linear-gradient(90deg, rgba(255, 91, 31, 0.25) 0%, var(--color-flame) 100%);
+		box-shadow: inset 0 0 18px rgba(255, 91, 31, 0.5);
+		margin-left: auto;
+	}
+
+	.lifebar-ticks {
+		position: absolute;
+		inset: 0;
+		background-image: repeating-linear-gradient(
+			135deg,
+			transparent 0 8px,
+			rgba(0, 0, 0, 0.18) 8px 14px
+		);
+		opacity: 0.7;
+	}
+
+	.lifebar-center {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		width: 38px;
+		height: 38px;
+		border-radius: 999px;
+		background: var(--color-void);
+		border: 1px solid var(--color-ink);
+		display: grid;
+		place-items: center;
+		font-family: var(--font-display);
+		font-size: 0.95rem;
+		color: var(--color-bone);
+		letter-spacing: 0.05em;
+		z-index: 2;
+	}
+
+	.pred-figures {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1rem;
+		margin-top: 1.25rem;
+	}
+
+	.pred-figure {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		margin: 0;
+		min-width: 0;
+	}
+
+	.pred-figure figcaption {
+		min-width: 0;
+		overflow: hidden;
+	}
+
+	.pred-figure--p2 {
+		flex-direction: row-reverse;
+		text-align: right;
+	}
+
+	.pred-figure-char {
+		width: 64px;
+		height: 64px;
+		border-radius: 8px;
+		overflow: hidden;
+		background: var(--color-void-2);
+		border: 1px solid var(--color-ink);
+		display: grid;
+		place-items: center;
+		flex-shrink: 0;
+	}
+
+	.pred-figure-char-img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+
+	.pred-figure--p1 .pred-figure-char {
+		box-shadow: 0 0 18px rgba(25, 227, 255, 0.5);
+		border-color: var(--color-cyan);
+	}
+
+	.pred-figure--p2 .pred-figure-char {
+		box-shadow: 0 0 18px rgba(255, 91, 31, 0.55);
+		border-color: var(--color-flame);
+	}
+
+	.pred-figure-name {
+		font-family: var(--font-display);
+		font-size: 1rem;
+		letter-spacing: 0.06em;
+		color: var(--color-bone);
+		text-transform: uppercase;
+		font-weight: 700;
+		line-height: 1.1;
+	}
+
+	.pred-figure--p1 .pred-figure-name {
+		text-shadow: 0 0 14px rgba(25, 227, 255, 0.35);
+	}
+
+	.pred-figure--p2 .pred-figure-name {
+		text-shadow: 0 0 14px rgba(255, 91, 31, 0.4);
+	}
+
+	.pred-figure-pct {
+		font-family: var(--font-display);
+		font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+		line-height: 1;
+		letter-spacing: -0.02em;
+	}
+
+	.pred-figure--p1 .pred-figure-pct {
+		color: var(--color-cyan);
+		text-shadow: 0 0 18px rgba(25, 227, 255, 0.5);
+	}
+
+	.pred-figure--p2 .pred-figure-pct {
+		color: var(--color-flame);
+		text-shadow: 0 0 18px rgba(255, 91, 31, 0.55);
+	}
+
+	.pred-ticker {
+		margin: 1rem 0 1.25rem;
+		text-align: center;
+		font-family: var(--font-body);
+		font-size: 0.78rem;
+		letter-spacing: 0.22em;
+		color: var(--color-ash);
+		text-transform: uppercase;
+	}
+
+	.pred-ticker strong {
+		color: var(--color-gold);
+		font-weight: 700;
+		letter-spacing: 0.15em;
+	}
+
+	.pred-feed {
+		margin: 0 0 1.5rem;
+		padding: 1rem 1.1rem 0.85rem;
+		border: 1px solid var(--color-ink);
+		border-radius: 8px;
+		background: rgba(5, 5, 10, 0.45);
+	}
+
+	.pred-feed-head {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 1rem;
+		margin-bottom: 0.75rem;
+	}
+
+	.pred-feed-title {
+		margin: 0;
+		font-family: var(--font-body);
+		font-size: 0.78rem;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--color-ash);
+		font-weight: 600;
+	}
+
+	.pred-feed-count {
+		font-family: var(--font-body);
+		font-size: 0.7rem;
+		letter-spacing: 0.22em;
+		color: var(--color-ash);
+		text-transform: uppercase;
+	}
+
+	.pred-feed-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		max-height: 240px;
+		overflow-y: auto;
+		scrollbar-width: thin;
+		scrollbar-color: var(--color-ink) transparent;
+	}
+
+	.pred-feed-list::-webkit-scrollbar {
+		width: 6px;
+	}
+
+	.pred-feed-list::-webkit-scrollbar-thumb {
+		background: var(--color-ink);
+		border-radius: 3px;
+	}
+
+	.pred-feed-empty {
+		font-family: var(--font-body);
+		font-size: 0.78rem;
+		color: var(--color-ash);
+		padding: 0.75rem 0.5rem;
+		text-align: center;
+		letter-spacing: 0.05em;
+	}
+
+	.pred-feed-item {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 0.5rem 0.65rem;
+		border-radius: 6px;
+		background: rgba(15, 15, 22, 0.55);
+		border-left: 2px solid var(--color-ink);
+		font-family: var(--font-body);
+		font-size: 0.82rem;
+		min-width: 0;
+		transition: background 200ms, border-color 200ms;
+	}
+
+	.pred-feed-item--p1 {
+		border-left-color: var(--color-cyan);
+	}
+
+	.pred-feed-item--p2 {
+		border-left-color: var(--color-flame);
+	}
+
+	.pred-feed-item:hover {
+		background: rgba(15, 15, 22, 0.85);
+	}
+
+	.pred-feed-char {
+		flex-shrink: 0;
+		display: block;
+		width: 40px;
+		height: 40px;
+		max-width: 40px;
+		max-height: 40px;
+		border-radius: 6px;
+		background: var(--color-void-2);
+		overflow: hidden;
+		border: 1px solid var(--color-ink);
+	}
+
+	.pred-feed-item--p1 .pred-feed-char {
+		border-color: var(--color-cyan);
+		box-shadow: 0 0 10px rgba(25, 227, 255, 0.35);
+	}
+
+	.pred-feed-item--p2 .pred-feed-char {
+		border-color: var(--color-flame);
+		box-shadow: 0 0 10px rgba(255, 91, 31, 0.4);
+	}
+
+	.pred-feed-img {
+		display: block;
+		width: 40px;
+		height: 40px;
+		max-width: 40px;
+		max-height: 40px;
+		object-fit: cover;
+		object-position: center 20%;
+	}
+
+	.pred-feed-body {
+		flex: 1;
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.1rem;
+		line-height: 1.25;
+	}
+
+	.pred-feed-tag {
+		font-weight: 700;
+		color: var(--color-bone);
+		letter-spacing: 0.02em;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		font-size: 0.88rem;
+	}
+
+	.pred-feed-meta {
+		font-size: 0.72rem;
+		color: var(--color-ash);
+		letter-spacing: 0.02em;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.pred-feed-gt {
+		color: var(--color-bone);
+		font-weight: 600;
+	}
+
+	.pred-feed-amount {
+		flex-shrink: 0;
+		margin-left: auto;
+		padding-left: 0.5rem;
+		font-family: var(--font-display);
+		font-size: 1rem;
+		letter-spacing: 0.02em;
+	}
+
+	.pred-feed-amount--p1 {
+		color: var(--color-cyan);
+	}
+
+	.pred-feed-amount--p2 {
+		color: var(--color-flame);
+	}
+
+	.pred-stage[hidden] { display: none; }
+
+	.pred-actions {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0.75rem;
+	}
+
+	.pred-vote {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.65rem;
+		padding: 0.65rem 1rem;
+		font-family: var(--font-body);
+		font-weight: 700;
+		font-size: 0.78rem;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		border-radius: 6px;
+		cursor: pointer;
+		transition: transform 180ms, box-shadow 180ms, background 180ms;
+		border: 1px solid;
+		overflow: hidden;
+	}
+
+	.pred-vote-char {
+		width: clamp(36px, 5vw, 56px);
+		height: auto;
+		object-fit: contain;
+		flex-shrink: 0;
+	}
+
+	.pred-vote-label {
+		white-space: nowrap;
+	}
+
+	.pred-vote-arrow {
+		flex-shrink: 0;
+	}
+
+	.pred-vote--p1 {
+		background: rgba(25, 227, 255, 0.08);
+		color: var(--color-cyan);
+		border-color: var(--color-cyan);
+	}
+
+	.pred-vote--p1:hover,
+	.pred-vote--p1:focus-visible {
+		background: rgba(25, 227, 255, 0.18);
+		box-shadow: 0 0 22px rgba(25, 227, 255, 0.45);
+		transform: translateY(-1px);
+		outline: none;
+	}
+
+	.pred-vote--p2 {
+		background: rgba(255, 91, 31, 0.08);
+		color: var(--color-flame);
+		border-color: var(--color-flame);
+	}
+
+	.pred-vote--p2:hover,
+	.pred-vote--p2:focus-visible {
+		background: rgba(255, 91, 31, 0.18);
+		box-shadow: 0 0 22px rgba(255, 91, 31, 0.5);
+		transform: translateY(-1px);
+		outline: none;
+	}
+
+	.pred-stage--form {
+		--pred-accent: var(--color-flame);
+		--pred-accent-soft: rgba(255, 91, 31, 0.06);
+		--pred-accent-glow: rgba(255, 91, 31, 0.4);
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		padding: 1.25rem;
+		border: 1px solid var(--color-ink);
+		border-top: 2px solid var(--pred-accent);
+		border-radius: 8px;
+		background: rgba(5, 5, 10, 0.6);
+		transition: border-top-color 200ms;
+	}
+
+	.pred-stage--form[data-side="p1"] {
+		--pred-accent: var(--color-cyan);
+		--pred-accent-soft: rgba(25, 227, 255, 0.06);
+		--pred-accent-glow: rgba(25, 227, 255, 0.4);
+	}
+
+	.pred-form-head {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+	}
+
+	.pred-form-eyebrow {
+		margin: 0;
+		font-family: var(--font-body);
+		font-size: 0.68rem;
+		letter-spacing: 0.42em;
+		color: var(--color-ash);
+		text-transform: uppercase;
+	}
+
+	.pred-form-title {
+		margin: 0;
+		font-family: var(--font-display);
+		font-size: clamp(1.25rem, 2vw, 1.6rem);
+		text-transform: uppercase;
+		letter-spacing: -0.01em;
+		line-height: 1.1;
+		color: var(--color-bone);
+	}
+
+	.pred-form-player {
+		color: var(--pred-accent);
+	}
+
+	.pred-form-body {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		margin: 0;
+	}
+
+	.pred-field {
+		display: flex;
+		flex-direction: column;
+		gap: 0.45rem;
+		border: 0;
+		padding: 0;
+		margin: 0;
+		min-width: 0;
+	}
+
+	.pred-field-label {
+		font-family: var(--font-body);
+		font-size: 0.72rem;
+		letter-spacing: 0.22em;
+		color: var(--color-ash);
+		text-transform: uppercase;
+		font-weight: 600;
+		padding: 0;
+	}
+
+	.pred-field input[type="text"],
+	.pred-field input[type="number"] {
+		font-family: var(--font-body);
+		font-size: 0.95rem;
+		color: var(--color-bone);
+		background: var(--color-void);
+		border: 1px solid var(--color-ink);
+		border-radius: 6px;
+		padding: 0.6rem 0.75rem;
+		transition: border-color 200ms, background 200ms;
+	}
+
+	.pred-field input[type="text"]:focus,
+	.pred-field input[type="number"]:focus {
+		outline: none;
+		border-color: var(--pred-accent);
+		background: var(--pred-accent-soft);
+	}
+
+	.pred-field-hint {
+		font-family: var(--font-body);
+		font-size: 0.7rem;
+		color: var(--color-ash);
+		opacity: 0.7;
+		line-height: 1.4;
+	}
+
+	.pred-chips {
+		display: flex;
+		gap: 0.5rem;
+		flex-wrap: wrap;
+	}
+
+	.pred-chip {
+		flex: 1 1 auto;
+		min-width: 64px;
+		font-family: var(--font-body);
+		font-weight: 700;
+		font-size: 0.85rem;
+		letter-spacing: 0.05em;
+		color: var(--color-bone);
+		background: transparent;
+		border: 1px solid var(--color-ink);
+		border-radius: 999px;
+		padding: 0.55rem 0.9rem;
+		cursor: pointer;
+		transition: border-color 200ms, color 200ms, background 200ms;
+	}
+
+	.pred-chip:hover,
+	.pred-chip:focus-visible {
+		border-color: var(--pred-accent);
+		color: var(--pred-accent);
+		outline: none;
+	}
+
+	.pred-chip.is-active {
+		background: var(--pred-accent);
+		color: var(--color-void);
+		border-color: var(--pred-accent);
+	}
+
+	.pred-custom-amt {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		width: 100%;
+		font-family: var(--font-body);
+		font-size: 0.95rem;
+		color: var(--color-bone);
+		background: var(--color-void);
+		border: 1px solid var(--color-ink);
+		border-radius: 6px;
+		padding: 0 0.75rem;
+		transition: border-color 200ms, background 200ms;
+	}
+
+	.pred-custom-amt:focus-within {
+		border-color: var(--pred-accent);
+		background: var(--pred-accent-soft);
+	}
+
+	.pred-custom-prefix {
+		font-weight: 700;
+		color: var(--color-ash);
+		user-select: none;
+	}
+
+	.pred-custom-amt input {
+		flex: 1;
+		min-width: 0;
+		font: inherit;
+		color: inherit;
+		background: transparent;
+		border: 0;
+		outline: none;
+		padding: 0.6rem 0;
+		-moz-appearance: textfield;
+	}
+
+	.pred-custom-amt input::-webkit-outer-spin-button,
+	.pred-custom-amt input::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+
+	.pred-form-actions {
+		display: flex;
+		justify-content: space-between;
+		gap: 0.75rem;
+		flex-wrap: wrap;
+	}
+
+	.pred-cancel,
+	.pred-submit {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		padding: 0.7rem 1.25rem;
+		border-radius: 999px;
+		font-family: var(--font-body);
+		font-weight: 700;
+		font-size: 0.78rem;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		cursor: pointer;
+		transition: background 200ms, color 200ms, border-color 200ms;
+	}
+
+	.pred-cancel {
+		background: transparent;
+		color: var(--color-ash);
+		border: 1px solid var(--color-ink);
+	}
+
+	.pred-cancel:hover,
+	.pred-cancel:focus-visible {
+		color: var(--color-bone);
+		border-color: var(--color-bone);
+		outline: none;
+	}
+
+	.pred-submit {
+		background: var(--pred-accent);
+		color: var(--color-void);
+		border: 1px solid var(--pred-accent);
+	}
+
+	.pred-submit:hover,
+	.pred-submit:focus-visible {
+		background: var(--pred-accent-glow);
+		outline: none;
+	}
+
+	.pred-stage--done {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		gap: 0.5rem;
+		padding: 1.5rem 1.25rem;
+		border: 1px solid var(--color-flame);
+		border-radius: 8px;
+		background: rgba(255, 91, 31, 0.06);
+	}
+
+	.pred-done-check {
+		color: var(--color-flame);
+		margin-bottom: 0.25rem;
+	}
+
+	.pred-done-eyebrow {
+		margin: 0;
+		font-family: var(--font-body);
+		font-size: 0.68rem;
+		letter-spacing: 0.42em;
+		color: var(--color-flame);
+		text-transform: uppercase;
+		font-weight: 700;
+	}
+
+	.pred-done-line,
+	.pred-done-tag {
+		margin: 0;
+		font-family: var(--font-body);
+		font-size: 0.95rem;
+		color: var(--color-bone);
+	}
+
+	.pred-done-line strong,
+	.pred-done-tag strong {
+		color: var(--color-gold);
+		font-weight: 700;
+	}
+
+	.pred-done-go {
+		margin-top: 0.75rem;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.85rem 1.5rem;
+		border-radius: 999px;
+		background: var(--color-flame);
+		color: var(--color-void);
+		font-family: var(--font-body);
+		font-weight: 700;
+		font-size: 0.78rem;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		text-decoration: none;
+		transition: background 200ms, color 200ms;
+	}
+
+	.pred-done-go:hover,
+	.pred-done-go:focus-visible {
+		background: #b53d12;
+		outline: none;
+	}
+
+	.is-hit {
+		animation: hit-flash 250ms ease-out;
+	}
+
+	@media (max-width: 640px) {
+		.pred-figures {
+			flex-direction: row;
+			gap: 0.5rem;
+		}
+		.pred-figure {
+			gap: 0.5rem;
+			min-width: 0;
+			flex: 1 1 0;
+		}
+		.pred-figure-char {
+			width: 48px;
+			height: 48px;
+		}
+		.pred-figure-name {
+			font-size: 0.82rem;
+			letter-spacing: 0.02em;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			min-width: 0;
+		}
+		.pred-figure-pct {
+			font-size: 1.5rem;
+		}
+		.pred-head-right {
+			margin-left: auto;
+		}
+		.pred-actions {
+			grid-template-columns: 1fr;
+		}
+		.pred-form-actions {
+			flex-direction: column-reverse;
+		}
+		.pred-cancel,
+		.pred-submit {
+			width: 100%;
+		}
+		.pred-feed-item {
+			gap: 0.55rem;
+			padding: 0.4rem 0.5rem;
+		}
+		.pred-feed-char,
+		.pred-feed-img {
+			width: 34px;
+			height: 34px;
+			max-width: 34px;
+			max-height: 34px;
+		}
+		.pred-feed-amount {
+			font-size: 0.9rem;
+		}
+	}
+</style>
