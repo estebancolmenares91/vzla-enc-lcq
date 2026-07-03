@@ -1,0 +1,3 @@
+export const SUPABASE_URL = "https://drkletnzoawuafsthvus.supabase.co";
+export const SUPABASE_ANON_KEY =
+	"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRya2xldG56b2F3dWFmc3RodnVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMwNzc0NjksImV4cCI6MjA5ODY1MzQ2OX0.9IBIidRHdwrWm1TKWI6W1sAAJod16rNS7T8fSKB3MYE";

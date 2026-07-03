@@ -1,7 +1,11 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from "./supabase-config";
 
-const url = import.meta.env.PUBLIC_SUPABASE_URL;
-const anon = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+const envUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+const envAnon = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+
+const url = envUrl || SUPABASE_URL;
+const anon = envAnon || SUPABASE_ANON_KEY;
 
 export const SUPABASE_ENABLED = Boolean(url && anon);
 
