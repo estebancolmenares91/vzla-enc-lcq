@@ -34,26 +34,8 @@ const target = EVENT.dateISO;
 	</p>
 </section>
 
-<script>
-	const root = document.querySelector<HTMLElement>(".cd-clock");
-	if (root) {
-		const target = new Date(root.dataset.target || "").getTime();
-		const f = {
-			d: root.querySelector<HTMLElement>('[data-field="d"]'),
-			h: root.querySelector<HTMLElement>('[data-field="h"]'),
-			m: root.querySelector<HTMLElement>('[data-field="m"]'),
-		};
-		const pad = (n: number) => String(Math.max(0, n)).padStart(2, "0");
-		const tick = () => {
-			const diff = Math.max(0, target - Date.now());
-			const s = Math.floor(diff / 1000);
-			if (f.d) f.d.textContent = pad(Math.floor(s / 86400));
-			if (f.h) f.h.textContent = pad(Math.floor((s % 86400) / 3600));
-			if (f.m) f.m.textContent = pad(Math.floor((s % 3600) / 60));
-		};
-		tick();
-		setInterval(tick, 1000);
-	}
+<script type="module">
+	import "../scripts/init.ts";
 </script>
 
 <style>
